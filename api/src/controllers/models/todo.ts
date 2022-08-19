@@ -17,6 +17,10 @@ const todoSchema: Schema = new Schema(
             type: Boolean,
             required: true,
         },
+        currentTime: {
+            type: String,
+            required: false
+        }
     },
     { timestamps: true }
 )

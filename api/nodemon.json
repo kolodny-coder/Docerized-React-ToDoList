@@ -1,7 +1,7 @@
 {
   "env": {
-    "MONGO_USER": "your-mongodb-user",
-    "MONGO_PASSWORD": "your-monogodb-password",
-    "MONGO_DB": "your-monogodb-database"
+    "MONGO_USER": "todolist-user",
+    "MONGO_PASSWORD": "todolist-pass",
+    "MONGO_DB": "todolist-collection"
   }
 }

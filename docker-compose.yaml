@@ -8,6 +8,14 @@ services:
     volumes:
       - ./api:/app
       - ./app/node_modules
+  what-is-the-time:
+    build: ./whatIsTheTime
+    container_name: whatIsTheTime_c
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./whatIsTheTime:/app
+      - ./app/node_modules
   my-app:
     build: ./my-app
     container_name: myapp_c

@@ -19,7 +19,9 @@ export const addTodo = async (
         const todo: Omit<ITodo, "_id"> = {
             name: formData.name,
             description: formData.description,
+            currentTime: formData.currentTime,
             status: false,
+
         }
         const saveTodo: AxiosResponse<ApiDataType> = await axios.post(
             baseUrl + "/add-todo",

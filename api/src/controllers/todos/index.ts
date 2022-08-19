@@ -1,6 +1,11 @@
 import { Response, Request } from "express"
 import { ITodo } from "../types/todos"
 import Todo from "../models/todo"
+import axios, { AxiosResponse } from "axios"
+
+const baseUrl: string =  'http://localhost:5000/gettime'
+
+
 
 const getTodos = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -11,7 +16,22 @@ const getTodos = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+export const getTime = async (): Promise<AxiosResponse<ApiDataType>> => {
+    try {
+        const time: AxiosResponse<ApiDataType> = await axios.get(
+            baseUrl
+        )
+        return time
+    } catch (error: any) {
+        throw new Error(error)
+    }
+}
+
 const addTodo = async (req: Request, res: Response): Promise<void> => {
+    const timeIsNow = await getTime()
+    const currentTime = timeIsNow.data.datetime
+    console.log(currentTime)
+
     try {
         const body = req.body as Pick<ITodo, "name" | "description" | "status">
 
@@ -19,6 +39,9 @@ const addTodo = async (req: Request, res: Response): Promise<void> => {
             name: body.name,
             description: body.description,
             status: body.status,
+            currentTime: currentTime
+
+
         })
 
         const newTodo: ITodo = await todo.save()
@@ -26,7 +49,7 @@ const addTodo = async (req: Request, res: Response): Promise<void> => {
 
         res
             .status(201)
-            .json({ message: "Todo added", todo: newTodo, todos: allTodos })
+            .json({ message: "Todo added", todo: newTodo, todos: allTodos, msg: currentTime })
     } catch (error) {
         throw error
     }
