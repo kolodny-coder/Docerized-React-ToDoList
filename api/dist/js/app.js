@@ -18,7 +18,7 @@ const options = { useNewUrlParser: true, useUnifiedTopology: true };
 mongoose_1.default.set("useFindAndModify", false);
 mongoose_1.default
     .connect(uri, options)
-    .then(() => app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT} ${mongoose_1.default.connection.readyState}`)))
+    .then(() => app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT} ${mongoose_1.default.connection.readyState}`)).keepAliveTimeout = 65000)
     .catch(error => {
     throw error;
 });

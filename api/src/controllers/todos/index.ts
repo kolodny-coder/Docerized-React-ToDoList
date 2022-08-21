@@ -3,11 +3,15 @@ import { ITodo } from "../types/todos"
 import Todo from "../models/todo"
 import axios, { AxiosResponse } from "axios"
 
-const baseUrl: string =  'http://localhost:5000/gettime'
+const baseUrl: string =  process.env.WHAT_IS_THE_TIME_URL ||'http://localhost:5000'
+console.log(`This is the env var process.env.WHAT_IS_THE_TIME_URL ${process.env.WHAT_IS_THE_TIME_URL} `)
+console.log(`This is the base url ${baseUrl}`)
 
 
 
 const getTodos = async (req: Request, res: Response): Promise<void> => {
+    console.log("Get Todos has been called")
+
     try {
         const todos: ITodo[] = await Todo.find()
         res.status(200).json({ todos })
@@ -17,10 +21,13 @@ const getTodos = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const getTime = async (): Promise<AxiosResponse<ApiDataType>> => {
+    console.log('getTime has been called inside api con')
     try {
         const time: AxiosResponse<ApiDataType> = await axios.get(
-            baseUrl
+
+            "http://" + baseUrl + "/gettime"
         )
+        console.log(`This is the url of the get time func using to get the time ${baseUrl} + "/gettime"`)
         return time
     } catch (error: any) {
         throw new Error(error)
@@ -28,7 +35,11 @@ export const getTime = async (): Promise<AxiosResponse<ApiDataType>> => {
 }
 
 const addTodo = async (req: Request, res: Response): Promise<void> => {
+    console.log('POST request has MADE TO add-todos')
+    console.log('calling getTime .....')
     const timeIsNow = await getTime()
+    console.log('get time has been called .....')
+
     const currentTime = timeIsNow.data.datetime
     console.log(currentTime)
 
@@ -92,4 +103,19 @@ const deleteTodo = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-export { getTodos, addTodo, updateTodo, deleteTodo }
+const deleteAllTodos = async (req: Request, res: Response): Promise<void> => {
+    try {
+        await Todo.deleteMany(
+            {}
+        )
+        const allTodos: ITodo[] = await Todo.find()
+        res.status(200).json({
+            message: "All Todo deleted",
+            todos: allTodos,
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+export { getTodos, addTodo, updateTodo, deleteTodo, deleteAllTodos }

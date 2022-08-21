@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 
-const baseUrl: string = "http://localhost:4000"
+const baseUrl: string =  process.env.REACT_APP_BACK_HOST || "http://localhost:4000"
+console.log(`This is the value of process.env.REACT_APP_BACK_HOST  = ${process.env.REACT_APP_BACK_HOST}`)
 
 export const getTodos = async (): Promise<AxiosResponse<ApiDataType>> => {
     try {

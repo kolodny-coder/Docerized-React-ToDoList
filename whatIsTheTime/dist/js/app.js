@@ -13,12 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 const PORT = process.env.PORT || 5000;
+console.log(`This is the process.env.PORT value == ${process.env.PORT}`);
 app.get('/gettime', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const datetime = yield new Date();
-    // console.log(datetime);
+    console.log("GET  request to what time is it had been made");
     const fib = fibonacci(1000000000);
     res.json({ datetime });
 }));

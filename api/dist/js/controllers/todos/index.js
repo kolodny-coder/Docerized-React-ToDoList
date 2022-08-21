@@ -12,11 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTodo = exports.updateTodo = exports.addTodo = exports.getTodos = exports.getTime = void 0;
+exports.deleteAllTodos = exports.deleteTodo = exports.updateTodo = exports.addTodo = exports.getTodos = exports.getTime = void 0;
 const todo_1 = __importDefault(require("../models/todo"));
 const axios_1 = __importDefault(require("axios"));
-const baseUrl = 'http://localhost:5000/gettime';
+const baseUrl = process.env.WHAT_IS_THE_TIME_URL || 'http://localhost:5000';
+console.log(`This is the env var process.env.WHAT_IS_THE_TIME_URL ${process.env.WHAT_IS_THE_TIME_URL} `);
+console.log(`This is the base url ${baseUrl}`);
 const getTodos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Get Todos has been called");
     try {
         const todos = yield todo_1.default.find();
         res.status(200).json({ todos });
@@ -27,8 +30,10 @@ const getTodos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getTodos = getTodos;
 const getTime = () => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('getTime has been called inside api con');
     try {
-        const time = yield axios_1.default.get(baseUrl);
+        const time = yield axios_1.default.get(baseUrl + "/gettime");
+        console.log(`This is the url of the get time func using to get the time ${baseUrl} + "/gettime"`);
         return time;
     }
     catch (error) {
@@ -37,7 +42,10 @@ const getTime = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getTime = getTime;
 const addTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('POST request has MADE TO add-todos');
+    console.log('calling getTime .....');
     const timeIsNow = yield (0, exports.getTime)();
+    console.log('get time has been called .....');
     const currentTime = timeIsNow.data.datetime;
     console.log(currentTime);
     try {
@@ -90,3 +98,17 @@ const deleteTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteTodo = deleteTodo;
+const deleteAllTodos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield todo_1.default.deleteMany({});
+        const allTodos = yield todo_1.default.find();
+        res.status(200).json({
+            message: "All Todo deleted",
+            todos: allTodos,
+        });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.deleteAllTodos = deleteAllTodos;
